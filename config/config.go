@@ -12,7 +12,7 @@ var Config config
 
 type config struct {
 	Server serverConfig
-	Game   gameConfig
+	Room   roomConfig
 }
 
 type serverConfig struct {
@@ -24,9 +24,9 @@ type serverConfig struct {
 	Debug bool
 }
 
-type gameConfig struct {
-	NameLength   int
-	SlotsPerRoom int
+type roomConfig struct {
+	NameLength int
+	Slots      int
 }
 
 // ReadConfig reads the configuration from file and stores it in the global variable "Config"

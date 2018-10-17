@@ -50,7 +50,7 @@ func (p *Player) SetState(newState int) {
 
 // SetName sets the name for the player
 func (p *Player) SetName(name string) error {
-	if len(name) <= config.Config.Game.NameLength {
+	if len(name) <= config.Config.Room.NameLength {
 		p.Name = name
 		return nil
 	}
@@ -60,6 +60,10 @@ func (p *Player) SetName(name string) error {
 // SetRoom sets the room of the player
 func (p *Player) SetRoom(roomid *bson.ObjectId) {
 	p.RoomID = roomid
+}
+
+func (p *Player) GetRoomID() string {
+	return p.RoomID.Hex()
 }
 
 func (p *Player) RemoveRoom() {

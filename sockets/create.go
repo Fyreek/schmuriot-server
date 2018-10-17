@@ -8,9 +8,8 @@ import (
 
 	"github.com/schmonk.io/schmuriot-server/config"
 	"github.com/schmonk.io/schmuriot-server/constants"
-	"github.com/schmonk.io/schmuriot-server/global"
 	"github.com/schmonk.io/schmuriot-server/models"
-	"github.com/schmonk.io/schmuriot-server/util"
+	"github.com/schmonk.io/schmuriot-server/utils"
 )
 
 var upgrader = websocket.Upgrader{}
@@ -22,13 +21,13 @@ func InitSocket(c *gin.Context) {
 	}
 
 	con, err := upgrader.Upgrade(c.Writer, c.Request, nil)
-	util.LogToConsole("socket upgrade request")
+	utils.LogToConsole("socket upgrade request")
 	if err != nil {
-		util.LogToConsole("socket upgrade failed:", err)
+		utils.LogToConsole("socket upgrade failed:", err)
 		return
 	}
 
-	gSlots := global.Players.GetPlayerCount()
+	gSlots := models.Players.GetPlayerCount()
 	if gSlots < config.Config.Server.Slots {
 		createSocketPlayer(con)
 	} else {
@@ -40,7 +39,7 @@ func InitSocket(c *gin.Context) {
 
 // createSocketPlayer creates the player for the websocket connection
 func createSocketPlayer(con *websocket.Conn) {
-	util.LogToConsole("Connected Players:", global.Players.GetPlayerCount())
+	utils.LogToConsole("Connected Players:", models.Players.GetPlayerCount())
 	player := models.CreatePlayer(con)
 	player.State = constants.StateUndefined
 	defer con.Close()

@@ -11,7 +11,7 @@ import (
 
 // Room is struct for a room
 type Room struct {
-	ID        bson.ObjectId      `json:"_id"`
+	ID        bson.ObjectId      `json:"id"`
 	Name      string             `json:"name"`
 	Pass      string             `json:"-"`
 	Protected bool               `json:"protected"`
@@ -46,6 +46,11 @@ func (r *Room) GetID() string {
 	return r.ID.Hex()
 }
 
+// GetID returns the room id as a string
+func (r *Room) GetBsonID() *bson.ObjectId {
+	return &r.ID
+}
+
 // SetID sets a random id for the room
 func (r *Room) SetID() {
 	r.ID = bson.NewObjectId()
@@ -55,7 +60,7 @@ func (r *Room) SetID() {
 func (r *Room) SetName(name string) error {
 	if len(name) < 3 {
 		return constants.ErrNameToShort
-	} else if len(name) <= config.Config.Game.NameLength {
+	} else if len(name) <= config.Config.Room.NameLength {
 		r.Name = name
 		return nil
 	}
@@ -81,7 +86,7 @@ func (r *Room) SetOwner(oID string) {
 func (r *Room) SetSlots(quantity int) error {
 	if quantity < 2 {
 		return constants.ErrToLessSlots
-	} else if quantity <= config.Config.Game.SlotsPerRoom {
+	} else if quantity <= config.Config.Room.Slots {
 		r.Slots = quantity
 		return nil
 	}
@@ -102,6 +107,8 @@ func (r *Room) AddPlayer(player *Player, pass string) error {
 		}
 	}
 	r.Players[player.GetID()] = player
+	player.SetRoom(r.GetBsonID())
+	player.SetState(constants.StateLobby)
 	r.Mut.Unlock()
 	return nil
 }
@@ -109,22 +116,29 @@ func (r *Room) AddPlayer(player *Player, pass string) error {
 // RemovePlayer removes the player from the room
 func (r *Room) RemovePlayer(player *Player) error {
 	r.Mut.Lock()
-	if player.GetID() == r.Owner {
-		delete(r.Players, player.GetID())
-		for _, p := range r.Players {
-			r.Owner = p.GetID()
-			break
+	if len(r.Players) > 1 {
+		if player.GetID() == r.Owner {
+			delete(r.Players, player.GetID())
+			for _, p := range r.Players {
+				r.Owner = p.GetID()
+				break
+			}
+			player.RoomID = nil
+			player.SetState(constants.StateRoomList)
+			r.Mut.Unlock()
+			return nil
 		}
-		r.Mut.Unlock()
-		return nil
 	}
 	delete(r.Players, player.GetID())
 	if len(r.Players) <= 0 {
+		player.RoomID = nil
+		player.SetState(constants.StateRoomList)
 		r.Mut.Unlock()
-		//delete the room (difficult because i have to use a global variable, which references models and creates a circular reference)
-		//probably do it from the action
-		return constants.ErrNoPlayer
+		Rooms.RemoveRoom(r)
+		return nil
 	}
+	player.RoomID = nil
+	player.SetState(constants.StateRoomList)
 	r.Mut.Unlock()
 	return nil
 }
@@ -137,10 +151,23 @@ func (r *Room) GetPlayerCount() int {
 	return count
 }
 
-func (r *Room) Lock() {
-	r.Mut.Lock()
+//SendToAllPlayers sends a message to all players
+func (r *Room) SendToAllPlayers(status bool, action string, message interface{}) {
+	for _, player := range r.Players {
+		r.SendToPlayer(status, action, message, player)
+	}
 }
 
-func (r *Room) Unlock() {
-	r.Mut.Unlock()
+//SendToPlayer sends a message to a specific player
+func (r *Room) SendToPlayer(status bool, action string, message interface{}, player *Player) {
+	if action == constants.ActionGetRoom {
+		SendJsonResponseRoom(status, constants.ActionGetRoom, 1, player)
+	} else {
+		str, ok := message.(string)
+		if ok {
+			SendJsonResponse(status, action, str, 1, player)
+		} else {
+			SendJsonResponse(status, action, constants.ErrUnknownMessageType.Error(), 1, player)
+		}
+	}
 }

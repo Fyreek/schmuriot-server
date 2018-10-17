@@ -7,6 +7,8 @@ var (
 	ErrNameNotSet         = errors.New("Set name first")
 	ErrInvalidPlayerState = errors.New("Player has invalid state")
 	ErrSerializing        = errors.New("Serializing json failed")
+	ErrActionNotPossible  = errors.New("Action not possible at this state")
+	ErrUnknownMessageType = errors.New("Unknown message type")
 	ErrNotImplemented     = errors.New("Not implemented")
 	ErrNameToLong         = errors.New("Name to long")
 	ErrNameToShort        = errors.New("Name to short, min 3")

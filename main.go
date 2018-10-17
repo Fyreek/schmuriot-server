@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/schmonk.io/schmuriot-server/config"
-	"github.com/schmonk.io/schmuriot-server/global"
+	"github.com/schmonk.io/schmuriot-server/models"
 	"github.com/schmonk.io/schmuriot-server/sockets"
 )
 
@@ -24,8 +24,8 @@ func main() {
 		sockets.InitSocket(c)
 		fmt.Println("ws connect")
 	})
-	global.CreatePlayerList()
-	global.CreateRoomList()
+	models.CreatePlayerList()
+	models.CreateRoomList()
 	log.Fatal(router.Run(sAddress))
 }
 
