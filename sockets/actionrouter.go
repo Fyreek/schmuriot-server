@@ -33,6 +33,10 @@ func ActionRouter(player *models.Player, message []byte, mt int) {
 		actions.Chat(player, message, mt)
 	case constants.ActionChangeOwner:
 		actions.ChangeOwner(player, message, mt)
+	case constants.ActionChangePassword:
+		actions.ChangePassword(player, message, mt)
+	case constants.ActionKickPlayer:
+		actions.KickPlayer(player, message, mt)
 	default:
 		utils.LogToConsole("Not implemented")
 		models.SendJsonResponse(false, constants.ActionNone, constants.ErrNotImplemented.Error(), mt, player)

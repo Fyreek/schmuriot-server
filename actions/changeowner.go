@@ -17,14 +17,14 @@ type ChangeOwnerAction struct {
 // ChangeOwner changes the owner of a room
 func ChangeOwner(player *models.Player, message []byte, mt int) {
 	if player.State != constants.StateLobby {
-		models.SendJsonResponse(false, constants.ActionCreateRoom, constants.ErrActionNotPossible.Error(), mt, player)
+		models.SendJsonResponse(false, constants.ActionChangeOwner, constants.ErrActionNotPossible.Error(), mt, player)
 		return
 	}
 	data := ChangeOwnerAction{}
 	err := json.Unmarshal(message, &data)
 	if err != nil {
 		utils.LogToConsole(err.Error())
-		models.SendJsonResponse(false, constants.ActionCreateRoom, constants.ErrInvalidJSON.Error(), mt, player)
+		models.SendJsonResponse(false, constants.ActionChangeOwner, constants.ErrInvalidJSON.Error(), mt, player)
 		return
 	}
 	r := models.Rooms.GetRoom(player.GetRoomID())
@@ -44,5 +44,5 @@ func ChangeOwner(player *models.Player, message []byte, mt int) {
 		r.SendToPlayer(true, constants.ActionGetRoom, "", player)
 		return
 	}
-	models.SendJsonResponse(false, constants.ActionJoinRoom, constants.ErrRoomNotFound.Error(), mt, player)
+	models.SendJsonResponse(false, constants.ActionChangeOwner, constants.ErrRoomNotFound.Error(), mt, player)
 }

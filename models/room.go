@@ -32,6 +32,9 @@ func CreateRoom(name, pass, owner string, slots int) (Room, error) {
 	}
 	r.SetPass(pass)
 	r.SetOwner(owner)
+	if slots == 0 {
+		slots = config.Config.Room.Slots
+	}
 	err = r.SetSlots(slots)
 	if err != nil {
 		return r, err
@@ -111,7 +114,7 @@ func (r *Room) AddPlayer(player *Player, pass string, first bool) error {
 	player.SetState(constants.StateLobby)
 	r.SendToAllPlayers(true, constants.ActionGetRoom, "", player)
 	if !first {
-		Players.SendToAllPlayers(true, constants.ActionGetRoom, "", player)
+		Players.SendToAllPlayers(true, constants.ActionGetRooms, "", player)
 	}
 	r.Mut.Unlock()
 	return nil

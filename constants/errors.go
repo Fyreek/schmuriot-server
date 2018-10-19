@@ -20,4 +20,5 @@ var (
 	ErrRoomNotFound       = errors.New("Room not found")
 	ErrNotAdmin           = errors.New("User is not admin")
 	ErrPlayerNotFound     = errors.New("Player not found")
+	ErrCanNotKickSelf     = errors.New("Can't kick yourself")
 )

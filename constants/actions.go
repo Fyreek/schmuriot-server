@@ -13,14 +13,15 @@ var (
 	ActionCreateRoom = "createRoom"
 
 	// Lobby | Ready | Playing
-	ActionGetRoom     = "getRoom"
-	ActionLeaveRoom   = "leaveRoom"
-	ActionDeleteRoom  = "deleteRoom"
-	ActionChat        = "chat"
-	ActionChangeOwner = "changeOwner"
+	ActionGetRoom        = "getRoom"
+	ActionLeaveRoom      = "leaveRoom"
+	ActionDeleteRoom     = "deleteRoom"
+	ActionChat           = "chat"
+	ActionChangeOwner    = "changeOwner"
+	ActionChangePassword = "changePassword"
+	ActionKickPlayer     = "kickPlayer"
 
 	// Not implemented
-	ActionSetRoomPassword = "setRoomPassword"
-	ActionSetRoomGamemode = "setRoomGamemode"
-	ActionKickPlayer      = "kickPlayer"
+	ActionChangeMode = "changeMode"
+	ActionChangeGame = "changeGame"
 )

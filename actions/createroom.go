@@ -13,8 +13,7 @@ type CreateRoomAction struct {
 	models.BaseAction
 	Name  string `json:"name"`
 	Pass  string `json:"pass"`
-	Map   string `json:"map"`
-	Slots int    `json:"slots"`
+	Slots int    `json:"slots,omitempty"`
 }
 
 // CreateRoom gets called to create a new room

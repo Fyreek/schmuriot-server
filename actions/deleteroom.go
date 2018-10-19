@@ -8,7 +8,7 @@ import (
 // DeleteRoom is used to delete the current room if you are the owner
 func DeleteRoom(player *models.Player, mt int) {
 	if player.State != constants.StateLobby {
-		models.SendJsonResponse(false, constants.ActionGetRoom, constants.ErrActionNotPossible.Error(), mt, player)
+		models.SendJsonResponse(false, constants.ActionDeleteRoom, constants.ErrActionNotPossible.Error(), mt, player)
 		return
 	}
 	r := models.Rooms.GetRoom(player.GetRoomID())
@@ -25,5 +25,5 @@ func DeleteRoom(player *models.Player, mt int) {
 		models.SendJsonResponse(false, constants.ActionDeleteRoom, constants.ErrNotAdmin.Error(), mt, player)
 		return
 	}
-	models.SendJsonResponse(false, constants.ActionLeaveRoom, constants.ErrRoomNotFound.Error(), mt, player)
+	models.SendJsonResponse(false, constants.ActionDeleteRoom, constants.ErrRoomNotFound.Error(), mt, player)
 }
