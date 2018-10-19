@@ -94,7 +94,7 @@ func (r *Room) SetSlots(quantity int) error {
 }
 
 // AddPlayer adds a new player to the room
-func (r *Room) AddPlayer(player *Player, pass string) error {
+func (r *Room) AddPlayer(player *Player, pass string, first bool) error {
 	r.Mut.Lock()
 	if len(r.Players) >= r.Slots {
 		r.Mut.Unlock()
@@ -109,6 +109,10 @@ func (r *Room) AddPlayer(player *Player, pass string) error {
 	r.Players[player.GetID()] = player
 	player.SetRoom(r.GetBsonID())
 	player.SetState(constants.StateLobby)
+	r.SendToAllPlayers(true, constants.ActionGetRoom, "", player)
+	if !first {
+		Players.SendToAllPlayers(true, constants.ActionGetRoom, "", player)
+	}
 	r.Mut.Unlock()
 	return nil
 }
@@ -125,6 +129,8 @@ func (r *Room) RemovePlayer(player *Player) error {
 			}
 			player.RoomID = nil
 			player.SetState(constants.StateRoomList)
+			r.SendToAllPlayers(true, constants.ActionGetRoom, "", player)
+			Players.SendToAllPlayers(true, constants.ActionGetRooms, "", player)
 			r.Mut.Unlock()
 			return nil
 		}
@@ -134,11 +140,13 @@ func (r *Room) RemovePlayer(player *Player) error {
 		player.RoomID = nil
 		player.SetState(constants.StateRoomList)
 		r.Mut.Unlock()
-		Rooms.RemoveRoom(r)
+		Rooms.RemoveRoom(r, true)
 		return nil
 	}
 	player.RoomID = nil
 	player.SetState(constants.StateRoomList)
+	r.SendToAllPlayers(true, constants.ActionGetRoom, "", player)
+	Players.SendToAllPlayers(true, constants.ActionGetRooms, "", player)
 	r.Mut.Unlock()
 	return nil
 }
@@ -152,9 +160,14 @@ func (r *Room) GetPlayerCount() int {
 }
 
 //SendToAllPlayers sends a message to all players
-func (r *Room) SendToAllPlayers(status bool, action string, message interface{}) {
-	for _, player := range r.Players {
-		r.SendToPlayer(status, action, message, player)
+func (r *Room) SendToAllPlayers(status bool, action string, message interface{}, player *Player) {
+	for _, p := range r.Players {
+		if player != nil {
+			if player.GetID() == p.GetID() {
+				continue
+			}
+		}
+		r.SendToPlayer(status, action, message, p)
 	}
 }
 
@@ -162,6 +175,9 @@ func (r *Room) SendToAllPlayers(status bool, action string, message interface{})
 func (r *Room) SendToPlayer(status bool, action string, message interface{}, player *Player) {
 	if action == constants.ActionGetRoom {
 		SendJsonResponseRoom(status, constants.ActionGetRoom, 1, player)
+	} else if action == constants.ActionChat {
+		str, _ := message.(string)
+		SendJsonResponseChat(status, action, str, 1, player)
 	} else {
 		str, ok := message.(string)
 		if ok {

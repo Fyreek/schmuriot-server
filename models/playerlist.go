@@ -2,6 +2,8 @@ package models
 
 import (
 	"sync"
+
+	"github.com/schmonk.io/schmuriot-server/constants"
 )
 
 // PlayerList is a struct for a list of BasePlayers
@@ -48,4 +50,25 @@ func (pl *PlayerList) ModifyPlayer(player *Player) {
 	pl.Mut.Lock()
 	pl.Players[player.GetID()] = player
 	pl.Mut.Unlock()
+}
+
+//SendToAllPlayers sends a message to all players
+func (pl *PlayerList) SendToAllPlayers(status bool, action string, message interface{}, player *Player) {
+	for _, p := range pl.Players {
+		if player != nil {
+			if player.GetID() == p.GetID() {
+				continue
+			}
+		}
+		pl.SendToPlayer(status, action, message, p)
+	}
+}
+
+//SendToPlayer sends a message to a specific player
+func (pl *PlayerList) SendToPlayer(status bool, action string, message interface{}, player *Player) {
+	if action == constants.ActionGetRooms && player.State == constants.StateRoomList {
+		SendJsonResponseRoomList(status, action, Rooms.Rooms, 1, player)
+		return
+	}
+	return
 }

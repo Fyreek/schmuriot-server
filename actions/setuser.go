@@ -27,5 +27,6 @@ func SetUser(player *models.Player, message []byte, mt int) {
 	player.SetState(constants.StateRoomList)
 	models.Players.AddPlayer(player)
 	models.SendJsonResponsePlayerID(true, constants.ActionSetUser, player.GetID(), mt, player)
+	models.Players.SendToPlayer(true, constants.ActionGetRooms, "", player)
 	utils.LogToConsole("Connected Players:", models.Players.GetPlayerCount())
 }

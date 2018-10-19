@@ -6,13 +6,19 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "go build -o bin/schmonk-server",
+            "command": "go build -o bin/schmuriot-server",
             "problemMatcher": []
         },
         {
             "label": "run",
             "type": "shell",
-            "command": "./bin/schmonk-server",
+            "command": "./bin/schmuriot-server",
+            "problemMatcher": []
+        },
+        {
+            "label": "build linux",
+            "type": "shell",
+            "command": "GOOS=linux GOARCH=amd64 go build -o bin/schmuriot-server-linux",
             "problemMatcher": []
         }
     ]

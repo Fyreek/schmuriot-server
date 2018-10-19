@@ -31,6 +31,12 @@ type StatusResponseRoom struct {
 	Room *Room `json:"room"`
 }
 
+type StatusResponseChat struct {
+	StatusResponse
+	Message  string `json:"message"`
+	PlayerID string `json:"playerid"`
+}
+
 //SendJsonResponse sends a response with a status, the provided action and a custom message
 func SendJsonResponse(status bool, action string, message string, mt int, player *Player) {
 	resp := StatusResponseMessage{}
@@ -75,6 +81,19 @@ func SendJsonResponseRoom(status bool, action string, mt int, player *Player) {
 	resp.Status = status
 	resp.Action = action
 	resp.Room = Rooms.GetRoom(player.GetRoomID())
+	bytes, err := json.Marshal(resp)
+	if err != nil {
+		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))
+	}
+	player.Connection.WriteMessage(mt, bytes)
+}
+
+func SendJsonResponseChat(status bool, action, message string, mt int, player *Player) {
+	resp := StatusResponseChat{}
+	resp.Status = status
+	resp.Action = action
+	resp.Message = message
+	resp.PlayerID = player.GetID()
 	bytes, err := json.Marshal(resp)
 	if err != nil {
 		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))

@@ -34,16 +34,8 @@ func LeaveRoom(player *models.Player, message []byte, mt int) {
 			return
 		}
 		models.SendJsonResponse(true, constants.ActionLeaveRoom, "left room", mt, player)
+		models.Players.SendToPlayer(true, constants.ActionGetRooms, "", player)
 		return
 	}
 	models.SendJsonResponse(false, constants.ActionLeaveRoom, constants.ErrRoomNotFound.Error(), mt, player)
-
-	// err = global.Rooms.RemovePlayer(player)
-	// if err != nil {
-	// 	util.LogToConsole(err.Error())
-	// 	models.SendJsonResponse(false, util.ActionLeaveRoom, err.Error(), mt, &player.BasePlayer)
-	// 	return
-	// }
-	// player.SetState(util.StateRoomList)
-	// models.SendJsonResponse(true, util.ActionLeaveRoom, "left room", mt, &player.BasePlayer)
 }

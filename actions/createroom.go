@@ -36,7 +36,7 @@ func CreateRoom(player *models.Player, message []byte, mt int) {
 		models.SendJsonResponse(false, constants.ActionCreateRoom, err.Error(), mt, player)
 		return
 	}
-	err = r.AddPlayer(player, data.Pass)
+	err = r.AddPlayer(player, data.Pass, true)
 	if err != nil {
 		utils.LogToConsole(err.Error())
 		models.SendJsonResponse(false, constants.ActionCreateRoom, err.Error(), mt, player)

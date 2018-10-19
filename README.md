@@ -19,6 +19,8 @@ Slots = 10
 
 #### SetUser
 
+Sets the username for the connected user
+
 - `{"action":"setUser","name":"..."}`
 
 #### CreateRoom
@@ -47,6 +49,18 @@ Joins the room with the provided id an optional password
 
 #### LeaveRoom:
 
-Leaves the current room
+Leave the current room
 
 - `{"action":"leaveRoom"}`
+
+#### Chat:
+
+Posts a message into the room
+
+- `{"action":"chat", "message":"..."}`
+
+#### ChangeOwner:
+
+Change the owner of a room
+
+- `{"action":"changeOwner", "id":"..."}`

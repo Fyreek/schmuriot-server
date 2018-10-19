@@ -30,7 +30,7 @@ func JoinRoom(player *models.Player, message []byte, mt int) {
 
 	r := models.Rooms.GetRoom(data.Id)
 	if r != nil {
-		err = r.AddPlayer(player, data.Pass)
+		err = r.AddPlayer(player, data.Pass, false)
 		if err != nil {
 			if err == constants.ErrRoomNotFound {
 				utils.LogToConsole(err.Error())
@@ -42,7 +42,7 @@ func JoinRoom(player *models.Player, message []byte, mt int) {
 			return
 		}
 		models.SendJsonResponse(true, constants.ActionJoinRoom, "joined room", mt, player)
-		r.SendToAllPlayers(true, constants.ActionGetRoom, "")
+		r.SendToPlayer(true, constants.ActionGetRoom, "", player)
 		return
 	}
 	models.SendJsonResponse(false, constants.ActionJoinRoom, constants.ErrRoomNotFound.Error(), mt, player)

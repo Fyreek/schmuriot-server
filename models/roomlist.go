@@ -3,6 +3,8 @@ package models
 import (
 	"encoding/json"
 	"sync"
+
+	"github.com/schmonk.io/schmuriot-server/constants"
 )
 
 // RoomList is a struct for a list of Rooms
@@ -31,16 +33,20 @@ func (rl *RoomList) GetRooms() map[string]*Room {
 func (rl *RoomList) AddRoom(room *Room) {
 	rl.Mut.Lock()
 	rl.Rooms[room.GetID()] = room
+	Players.SendToAllPlayers(true, constants.ActionGetRooms, "", nil)
 	rl.Mut.Unlock()
 }
 
 // RemoveRoom removes a room from the global room list
-func (rl *RoomList) RemoveRoom(room *Room) {
+func (rl *RoomList) RemoveRoom(room *Room, autoUpdate bool) {
 	rl.Mut.Lock()
 	for _, player := range room.Players {
 		player.RemoveRoom()
 	}
 	delete(rl.Rooms, room.GetID())
+	if autoUpdate {
+		Players.SendToAllPlayers(true, constants.ActionGetRooms, "", nil)
+	}
 	rl.Mut.Unlock()
 }
 

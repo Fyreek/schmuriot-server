@@ -1,12 +1,26 @@
 package constants
 
 var (
-	ActionNone       = "none"
-	ActionSetUser    = "setUser"
+	// Anytime
+	ActionNone = "none"
+
+	// Unset
+	ActionSetUser = "setUser"
+
+	// RoomList
 	ActionGetRooms   = "getRooms"
-	ActionGetRoom    = "getRoom"
 	ActionJoinRoom   = "joinRoom"
-	ActionLeaveRoom  = "leaveRoom"
 	ActionCreateRoom = "createRoom"
-	// Delete room as owner
+
+	// Lobby | Ready | Playing
+	ActionGetRoom     = "getRoom"
+	ActionLeaveRoom   = "leaveRoom"
+	ActionDeleteRoom  = "deleteRoom"
+	ActionChat        = "chat"
+	ActionChangeOwner = "changeOwner"
+
+	// Not implemented
+	ActionSetRoomPassword = "setRoomPassword"
+	ActionSetRoomGamemode = "setRoomGamemode"
+	ActionKickPlayer      = "kickPlayer"
 )

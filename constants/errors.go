@@ -18,4 +18,6 @@ var (
 	ErrToManySlots        = errors.New("To many slots")
 	ErrToLessSlots        = errors.New("To less slots, min 2")
 	ErrRoomNotFound       = errors.New("Room not found")
+	ErrNotAdmin           = errors.New("User is not admin")
+	ErrPlayerNotFound     = errors.New("Player not found")
 )
