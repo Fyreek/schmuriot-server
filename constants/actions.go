@@ -24,4 +24,6 @@ var (
 	// Not implemented
 	ActionChangeMode = "changeMode"
 	ActionChangeGame = "changeGame"
+	ActionGetMode    = "getMode"
+	ActionGetGame    = "getGame"
 )

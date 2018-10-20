@@ -15,10 +15,11 @@ type Room struct {
 	Name      string             `json:"name"`
 	Pass      string             `json:"-"`
 	Protected bool               `json:"protected"`
-	Map       string             `json:"map"`
 	Slots     int                `json:"slots"`
 	Owner     string             `json:"owner"`
 	Players   map[string]*Player `json:"players"`
+	Mode      string             `json:"mode"`
+	Game      string             `json:"game"`
 	Mut       *sync.Mutex        `json:"-"`
 }
 
