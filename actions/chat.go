@@ -16,7 +16,7 @@ type ChatAction struct {
 
 // Chat sends a chat message to all room players
 func Chat(player *models.Player, message []byte, mt int) {
-	if player.State != constants.StateLobby && player.State != constants.StateReady && player.State != constants.StatePlaying {
+	if player.State != constants.StateLobby && player.State != constants.StateInGame {
 		models.SendJsonResponse(false, constants.ActionChat, constants.ErrActionNotPossible.Error(), mt, player)
 		return
 	}

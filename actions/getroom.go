@@ -6,7 +6,7 @@ import (
 )
 
 func GetRoom(player *models.Player, mt int) {
-	if player.State != constants.StateLobby && player.State != constants.StateReady && player.State != constants.StatePlaying {
+	if player.State != constants.StateLobby && player.State != constants.StateInGame {
 		models.SendJsonResponse(false, constants.ActionGetRoom, constants.ErrActionNotPossible.Error(), mt, player)
 		return
 	}

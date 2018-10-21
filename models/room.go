@@ -16,10 +16,10 @@ type Room struct {
 	Pass      string             `json:"-"`
 	Protected bool               `json:"protected"`
 	Slots     int                `json:"slots"`
-	Owner     string             `json:"owner"`
-	Players   map[string]*Player `json:"players"`
 	Mode      string             `json:"mode"`
 	Game      string             `json:"game"`
+	Owner     string             `json:"owner"`
+	Players   map[string]*Player `json:"players"`
 	Mut       *sync.Mutex        `json:"-"`
 }
 
@@ -31,10 +31,13 @@ func CreateRoom(name, pass, owner string, slots int) (Room, error) {
 	if err != nil {
 		return r, err
 	}
-	r.SetPass(pass)
+	err = r.SetPass(pass)
+	if err != nil {
+		return r, err
+	}
 	r.SetOwner(owner)
 	if slots == 0 {
-		slots = config.Config.Room.Slots
+		slots = config.Config.Room.MaxSlots
 	}
 	err = r.SetSlots(slots)
 	if err != nil {
@@ -62,9 +65,9 @@ func (r *Room) SetID() {
 
 // SetName sets the name for the room
 func (r *Room) SetName(name string) error {
-	if len(name) < 3 {
+	if len(name) < config.Config.Room.MinNameLength {
 		return constants.ErrNameToShort
-	} else if len(name) <= config.Config.Room.NameLength {
+	} else if len(name) <= config.Config.Room.MaxNameLength {
 		r.Name = name
 		return nil
 	}
@@ -72,13 +75,20 @@ func (r *Room) SetName(name string) error {
 }
 
 // SetPass sets the password for the room
-func (r *Room) SetPass(pass string) {
-	r.Pass = pass
-	if pass == "" {
-		r.Protected = false
-		return
+func (r *Room) SetPass(pass string) error {
+	if len(pass) < config.Config.Room.MinPassLength {
+		if pass == "" {
+			r.Pass = pass
+			r.Protected = false
+			return nil
+		}
+		return constants.ErrPassToShort
+	} else if len(pass) <= config.Config.Room.MaxPassLength {
+		r.Pass = pass
+		r.Protected = true
+		return nil
 	}
-	r.Protected = true
+	return constants.ErrPassToLong
 }
 
 // SetOwner sets the owner id of the room
@@ -88,9 +98,9 @@ func (r *Room) SetOwner(oID string) {
 
 // SetSlots sets the number of slots available for the room
 func (r *Room) SetSlots(quantity int) error {
-	if quantity < 2 {
+	if quantity < config.Config.Room.MinSlots {
 		return constants.ErrToLessSlots
-	} else if quantity <= config.Config.Room.Slots {
+	} else if quantity <= config.Config.Room.MaxSlots {
 		r.Slots = quantity
 		return nil
 	}

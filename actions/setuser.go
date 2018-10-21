@@ -23,7 +23,11 @@ func SetUser(player *models.Player, message []byte, mt int) {
 		models.SendJsonResponse(false, constants.ActionSetUser, constants.ErrInvalidJSON.Error(), mt, player)
 		return
 	}
-	player.Name = data.Name
+	err = player.SetName(data.Name)
+	if err != nil {
+		models.SendJsonResponse(false, constants.ActionSetUser, err.Error(), mt, player)
+		return
+	}
 	player.SetState(constants.StateRoomList)
 	models.Players.AddPlayer(player)
 	models.SendJsonResponsePlayerID(true, constants.ActionSetUser, player.GetID(), mt, player)

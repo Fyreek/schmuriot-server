@@ -17,8 +17,9 @@ func DeleteRoom(player *models.Player, mt int) {
 			models.Rooms.RemoveRoom(r, false)
 			for _, p := range r.Players {
 				p.RemoveRoom()
-				models.SendJsonResponse(true, constants.ActionDeleteRoom, "closed by room admin", mt, p)
+				// models.SendJsonResponse(true, constants.ActionDeleteRoom, "closed by room admin", mt, p)
 			}
+			r.SendToAllPlayers(true, constants.ActionDeleteRoom, "closed by room admin", nil)
 			models.Players.SendToAllPlayers(true, constants.ActionGetRooms, "", nil)
 			return
 		}

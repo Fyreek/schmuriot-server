@@ -6,6 +6,9 @@
     - [1.1 SetUser](#11-setuser)
         - [1.1.1 Request](#111-request)
         - [1.1.2 Responses](#112-responses)
+    - [1.2 GetConfig](#12-getconfig)
+        - [1.2.1 Request](#121-request)
+        - [1.2.2 Responses](#122-responses)
 - [2 RoomList](#2-roomlist)
     - [2.1 GetRooms](#21-getrooms)
         - [2.1.1 Request](#211-request)
@@ -38,6 +41,9 @@
     - [3.7 KickPlayer](#37-kickplayer)
         - [3.7.1 Request](#371-request)
         - [3.7.2 Responses](#372-responses)
+    - [3.8 ToggleReady](#38-toggleready)
+        - [3.8.1 Request](#381-request)
+        - [3.8.2 Responses](#382-responses)
 - [4 Not implemented](#4-not-implemented)
     - [4.1 GetMode](#41-getmode)
     - [4.2 ChangeMode](#42-changemode)
@@ -68,12 +74,39 @@ Sets the name of the user and registers him on the server
     "playerid": "5678"
 }
 ```
+- [GetRooms Responses](#212-responses)
+
+### 1.2 GetConfig
+
+Gets the server configuration. Values include e.g. allowed length of room names, etc.
+
+#### 1.2.1 Request
+
+```
+{
+    "action": "getConfig"
+}
+```
+
+#### 1.2.2 Responses
+
 ```
 {
     "status": true,
-    "action": "getRooms",
-    "rooms": {
-        ...
+    "action": "getConfig",
+    "config": {
+        "player": {
+            "minNameLength": 3,
+            "maxNameLength": 12
+        },
+        "room": {
+            "minNameLength": 3,
+            "maxNameLength": 12,
+            "minSlots": 2,
+            "maxSlots": 4,
+            "minPassLength": 3,
+            "maxPassLength": 12
+        }
     }
 }
 ```
@@ -383,12 +416,43 @@ Can only be run by the admin.
 - [GetRoom Responses](#312-responses) -> To all players in the room
 - [GetRooms Responses](#212-responses) -> To all other players still in roomlist
 
+### 3.8 ToggleReady
+
+Toggles the player ready state. Game can only be started if all players are ready
+
+#### 3.8.1 Request
+
+```
+{
+    "action": "toggleReady"
+}
+```
+
+#### 3.8.2 Responses
+
+```
+{
+    "status": true,
+    "action": "toggleReady",
+    "message": "Toggled ready"
+}
+```
+- [GetRoom Responses](#312-responses) -> To all players in the room
+
 ## 4 Not implemented
 
 ### 4.1 GetMode
 
+Gets a list off all available modes
+
 ### 4.2 ChangeMode
+
+Changes the mode and resets player ready bool
 
 ### 4.3 GetGame
 
+Gets a list of all available games
+
 ### 4.4 ChangeGame
+
+Changes the game and resets player ready bool

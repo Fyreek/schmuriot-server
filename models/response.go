@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 
+	"github.com/schmonk.io/schmuriot-server/config"
 	"github.com/schmonk.io/schmuriot-server/constants"
 )
 
@@ -35,6 +36,11 @@ type StatusResponseChat struct {
 	StatusResponse
 	Message  string `json:"message"`
 	PlayerID string `json:"playerid"`
+}
+
+type StatusResponseConfig struct {
+	StatusResponse
+	Config config.ConfigStruct `json:"config"`
 }
 
 //SendJsonResponse sends a response with a status, the provided action and a custom message
@@ -94,6 +100,18 @@ func SendJsonResponseChat(status bool, action, message string, mt int, player *P
 	resp.Action = action
 	resp.Message = message
 	resp.PlayerID = player.GetID()
+	bytes, err := json.Marshal(resp)
+	if err != nil {
+		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))
+	}
+	player.Connection.WriteMessage(mt, bytes)
+}
+
+func SendJsonResponseConfig(mt int, player *Player) {
+	resp := StatusResponseConfig{}
+	resp.Status = true
+	resp.Action = constants.ActionGetConfig
+	resp.Config = config.Config
 	bytes, err := json.Marshal(resp)
 	if err != nil {
 		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))

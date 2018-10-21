@@ -37,6 +37,8 @@ func ActionRouter(player *models.Player, message []byte, mt int) {
 		actions.ChangePassword(player, message, mt)
 	case constants.ActionKickPlayer:
 		actions.KickPlayer(player, message, mt)
+	case constants.ActionToggleReady:
+		actions.ToggleReady(player, mt)
 	default:
 		utils.LogToConsole("Not implemented")
 		models.SendJsonResponse(false, constants.ActionNone, constants.ErrNotImplemented.Error(), mt, player)

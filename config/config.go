@@ -8,11 +8,12 @@ import (
 )
 
 // Config is a global variables that stores the loaded configuration
-var Config config
+var Config ConfigStruct
 
-type config struct {
-	Server serverConfig
-	Room   roomConfig
+type ConfigStruct struct {
+	Server serverConfig `json:"-"`
+	Player playerConfig `json:"player"`
+	Room   roomConfig   `json:"room"`
 }
 
 type serverConfig struct {
@@ -24,9 +25,18 @@ type serverConfig struct {
 	Debug bool
 }
 
+type playerConfig struct {
+	MinNameLength int `json:"minNameLength"`
+	MaxNameLength int `json:"maxNameLength"`
+}
+
 type roomConfig struct {
-	NameLength int
-	Slots      int
+	MinNameLength int `json:"minNameLength"`
+	MaxNameLength int `json:"maxNameLength"`
+	MinSlots      int `json:"minSlots"`
+	MaxSlots      int `json:"maxSlots"`
+	MinPassLength int `json:"minPassLength"`
+	MaxPassLength int `json:"maxPassLength"`
 }
 
 // ReadConfig reads the configuration from file and stores it in the global variable "Config"
@@ -35,7 +45,7 @@ func ReadConfig(configfile string) error {
 	if err != nil {
 		return err
 	}
-	var config config
+	var config ConfigStruct
 	_, err = toml.DecodeFile(configfile, &config)
 	if err != nil {
 		log.Fatal(err)

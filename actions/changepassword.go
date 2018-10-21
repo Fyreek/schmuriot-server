@@ -33,7 +33,11 @@ func ChangePassword(player *models.Player, message []byte, mt int) {
 			models.SendJsonResponse(false, constants.ActionChangePassword, constants.ErrNotAdmin.Error(), mt, player)
 			return
 		}
-		r.SetPass(data.Pass)
+		err = r.SetPass(data.Pass)
+		if err != nil {
+			models.SendJsonResponse(false, constants.ActionChangePassword, err.Error(), mt, player)
+			return
+		}
 		models.SendJsonResponse(true, constants.ActionChangePassword, "password changed", mt, player)
 		models.Players.SendToAllPlayers(true, constants.ActionGetRooms, "", nil)
 		return

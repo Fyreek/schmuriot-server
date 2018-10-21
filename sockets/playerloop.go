@@ -31,13 +31,19 @@ func PlayerLoop(player *models.Player) {
 				models.SendJsonResponse(false, constants.ActionNone, constants.ErrInvalidJSON.Error(), mt, player)
 				continue
 			}
-			if !baseAction.Check(constants.ActionSetUser) {
-				models.SendJsonResponse(false, constants.ActionNone, constants.ErrNameNotSet.Error(), mt, player)
+			if baseAction.Check(constants.ActionSetUser) {
+				actions.SetUser(player, message, mt)
 				continue
 			}
-			actions.SetUser(player, message, mt)
+			if baseAction.Check(constants.ActionGetConfig) {
+				actions.GetConfig(player, mt)
+				continue
+			}
+			models.SendJsonResponse(false, constants.ActionNone, constants.ErrNameNotSet.Error(), mt, player)
+			continue
 		} else if player.State != constants.StateUndefined {
 			ActionRouter(player, message, mt)
+			continue
 		} else {
 			models.SendJsonResponse(false, constants.ActionNone, constants.ErrInvalidPlayerState.Error(), mt, player)
 			continue

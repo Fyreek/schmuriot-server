@@ -5,7 +5,8 @@ var (
 	ActionNone = "none"
 
 	// Unset
-	ActionSetUser = "setUser"
+	ActionSetUser   = "setUser"
+	ActionGetConfig = "getConfig"
 
 	// RoomList
 	ActionGetRooms   = "getRooms"
@@ -20,6 +21,7 @@ var (
 	ActionChangeOwner    = "changeOwner"
 	ActionChangePassword = "changePassword"
 	ActionKickPlayer     = "kickPlayer"
+	ActionToggleReady    = "toggleReady"
 
 	// Not implemented
 	ActionChangeMode = "changeMode"

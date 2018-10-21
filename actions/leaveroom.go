@@ -3,7 +3,6 @@ package actions
 import (
 	"encoding/json"
 
-	"github.com/schmonk.io/schmonk-server/util"
 	"github.com/schmonk.io/schmuriot-server/constants"
 	"github.com/schmonk.io/schmuriot-server/models"
 	"github.com/schmonk.io/schmuriot-server/utils"
@@ -14,7 +13,7 @@ type LeaveRoomAction struct {
 }
 
 func LeaveRoom(player *models.Player, message []byte, mt int) {
-	if player.State != util.StateLobby && player.State != util.StateReady && player.State != util.StatePlaying {
+	if player.State != constants.StateLobby && player.State != constants.StateInGame {
 		models.SendJsonResponse(false, constants.ActionLeaveRoom, constants.ErrActionNotPossible.Error(), mt, player)
 		return
 	}

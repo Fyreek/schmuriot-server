@@ -14,6 +14,7 @@ type Player struct {
 	Name       string          `json:"name"`
 	Connection *websocket.Conn `json:"-"`
 	State      int             `json:"state"`
+	Ready      bool            `json:"ready"`
 	RoomID     *bson.ObjectId  `json:"roomid"`
 	PosX       float32         `json:"posx"`
 	PosY       float32         `json:"posy"`
@@ -50,7 +51,9 @@ func (p *Player) SetState(newState int) {
 
 // SetName sets the name for the player
 func (p *Player) SetName(name string) error {
-	if len(name) <= config.Config.Room.NameLength {
+	if len(name) < config.Config.Player.MinNameLength {
+		return constants.ErrNameToShort
+	} else if len(name) <= config.Config.Player.MaxNameLength {
 		p.Name = name
 		return nil
 	}
@@ -69,4 +72,8 @@ func (p *Player) GetRoomID() string {
 func (p *Player) RemoveRoom() {
 	p.RoomID = nil
 	p.State = constants.StateRoomList
+}
+
+func (p *Player) ToggleReady() {
+	p.Ready = !p.Ready
 }
