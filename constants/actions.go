@@ -23,6 +23,9 @@ var (
 	ActionKickPlayer     = "kickPlayer"
 	ActionToggleReady    = "toggleReady"
 
+	//Game
+	ActionStartGame = "startGame"
+
 	// Not implemented
 	ActionChangeMode = "changeMode"
 	ActionChangeGame = "changeGame"

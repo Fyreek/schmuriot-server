@@ -17,7 +17,7 @@ type Room struct {
 	Protected bool               `json:"protected"`
 	Slots     int                `json:"slots"`
 	Mode      string             `json:"mode"`
-	Game      string             `json:"game"`
+	Game      *CoinHunter        `json:"game"`
 	Owner     string             `json:"owner"`
 	Players   map[string]*Player `json:"players"`
 	Mut       *sync.Mutex        `json:"-"`
@@ -189,6 +189,8 @@ func (r *Room) SendToAllPlayers(status bool, action string, message interface{},
 func (r *Room) SendToPlayer(status bool, action string, message interface{}, player *Player) {
 	if action == constants.ActionGetRoom {
 		SendJsonResponseRoom(status, constants.ActionGetRoom, 1, player)
+	} else if action == constants.ActionStartGame {
+		SendJsonResponseGame(status, action, 1, player)
 	} else if action == constants.ActionChat {
 		str, _ := message.(string)
 		SendJsonResponseChat(status, action, str, 1, player)

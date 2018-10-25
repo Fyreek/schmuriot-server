@@ -27,7 +27,6 @@ func JoinRoom(player *models.Player, message []byte, mt int) {
 		models.SendJsonResponse(false, constants.ActionJoinRoom, constants.ErrInvalidJSON.Error(), mt, player)
 		return
 	}
-
 	r := models.Rooms.GetRoom(data.Id)
 	if r != nil {
 		err = r.AddPlayer(player, data.Pass, false)
