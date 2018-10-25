@@ -227,31 +227,59 @@ Gets the room info.
 
 ```
 {
-    "status": true,
-    "action": "getRoom",
-    "room": {
-        "id": "1234",
-        "name": "TestRaum",
-        "protected": false,
-        "slots": 4,
-        "owner": "56789",
-        "players": {
-            "56789":{
-                "id": "56789",
-                "name": "TestSpieler",
-                "state": 2,
-                "roomid": "1234",
-                "posx": 0,
-                "posy": 0,
-                "color": ""
-            },
-            "734732": {
-                ...
-            }
-        },
-        "mode":"",
-        "game":""
-    }
+   "status":true,
+   "action":"getRoom",
+   "room":{
+      "id":"5bd0ef6fac356640e899d483",
+      "name":"TestRoom",
+      "protected":false,
+      "slots":4,
+      "mode":"",
+      "game":null,
+      "owner":"5bd0ef42ac356640e899d480",
+      "players":{
+         "5bd0ef38ac356640e899d47f":{
+            "id":"5bd0ef38ac356640e899d47f",
+            "name":"Peter",
+            "state":2,
+            "ready":false,
+            "roomid":"5bd0ef6fac356640e899d483",
+            "posx":0,
+            "posy":0,
+            "color":""
+         },
+         "5bd0ef42ac356640e899d480":{
+            "id":"5bd0ef42ac356640e899d480",
+            "name":"Hans",
+            "state":2,
+            "ready":false,
+            "roomid":"5bd0ef6fac356640e899d483",
+            "posx":0,
+            "posy":0,
+            "color":""
+         },
+         "5bd0ef4aac356640e899d481":{
+            "id":"5bd0ef4aac356640e899d481",
+            "name":"Gerd",
+            "state":2,
+            "ready":false,
+            "roomid":"5bd0ef6fac356640e899d483",
+            "posx":0,
+            "posy":0,
+            "color":""
+         },
+         "5bd0ef4eac356640e899d482":{
+            "id":"5bd0ef4eac356640e899d482",
+            "name":"Samuel",
+            "state":2,
+            "ready":false,
+            "roomid":"5bd0ef6fac356640e899d483",
+            "posx":0,
+            "posy":0,
+            "color":""
+         }
+      }
+   }
 }
 ```
 
