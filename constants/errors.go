@@ -23,4 +23,5 @@ var (
 	ErrCanNotKickSelf     = errors.New("Can't kick yourself")
 	ErrPassToShort        = errors.New("Password to short")
 	ErrPassToLong         = errors.New("Password to long")
+	ErrNotReady           = errors.New("Not all players are ready")
 )

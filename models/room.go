@@ -203,3 +203,17 @@ func (r *Room) SendToPlayer(status bool, action string, message interface{}, pla
 		}
 	}
 }
+
+func (r *Room) CheckAllReady() bool {
+	playerCount := len(r.Players)
+	if playerCount < r.Slots {
+		return false
+	}
+	for element := range r.Players {
+		player := r.Players[element]
+		if !player.Ready {
+			return false
+		}
+	}
+	return true
+}

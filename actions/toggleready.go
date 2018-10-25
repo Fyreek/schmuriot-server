@@ -16,6 +16,15 @@ func ToggleReady(player *models.Player, mt int) {
 		player.ToggleReady()
 		models.SendJsonResponse(true, constants.ActionToggleReady, "Toggled ready", mt, player)
 		r.SendToAllPlayers(true, constants.ActionGetRoom, "", nil)
+		start := r.CheckAllReady()
+		if start {
+			startGameAction := StartGameAction{}
+			startGameAction.Action = constants.ActionStartGame
+			startGameAction.Countdown = 15
+			startGameAction.Rounds = 5
+			bytes, _ := startGameAction.Marshal()
+			StartGame(player, bytes, mt)
+		}
 		return
 	}
 	models.SendJsonResponse(false, constants.ActionDeleteRoom, constants.ErrRoomNotFound.Error(), mt, player)

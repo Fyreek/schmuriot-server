@@ -16,6 +16,20 @@ func ActionRouter(player *models.Player, message []byte, mt int) {
 		return
 	}
 	utils.LogToConsole(baseAction.Action)
+	// switch(player.State) {
+	// case constants.StateUndefined:
+
+	// case constants.StateRoomList:
+
+	// case constants.StateLobby:
+
+	// case constants.StateInGame:
+
+	// case constants.StateSpectate:
+	// default:
+
+	// }
+
 	switch baseAction.Action {
 	case constants.ActionCreateRoom:
 		actions.CreateRoom(player, message, mt)

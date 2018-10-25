@@ -24,19 +24,25 @@ func StartGame(player *models.Player, message []byte, mt int) {
 	err := json.Unmarshal(message, &data)
 	if err != nil {
 		utils.LogToConsole(err.Error())
-		models.SendJsonResponse(false, constants.ActionJoinRoom, constants.ErrInvalidJSON.Error(), mt, player)
+		models.SendJsonResponse(false, constants.ActionStartGame, constants.ErrInvalidJSON.Error(), mt, player)
 		return
 	}
-	// Check if all players are ready
 	fmt.Print("Game Rounds: ")
 	fmt.Println(data.Rounds)
 	fmt.Print("Game Countdown: ")
 	fmt.Println(data.Countdown)
 	r := models.Rooms.GetRoom(player.GetRoomID())
 	if r != nil {
+		ready := r.CheckAllReady()
+		if !ready {
+			models.SendJsonResponse(false, constants.ActionStartGame, constants.ErrNotReady.Error(), mt, player)
+			return
+		}
 		playerList := []string{}
 		for element := range r.Players {
 			playerList = append(playerList, element)
+			p := r.Players[element]
+			p.SetState(constants.StateInGame)
 		}
 		game, _ := models.CreateCoinHunter(playerList, data.Rounds, data.Countdown)
 		fmt.Print("Game info ")
@@ -45,5 +51,5 @@ func StartGame(player *models.Player, message []byte, mt int) {
 		r.SendToAllPlayers(true, constants.ActionStartGame, "", nil)
 		return
 	}
-	models.SendJsonResponse(false, constants.ActionDeleteRoom, constants.ErrRoomNotFound.Error(), mt, player)
+	models.SendJsonResponse(false, constants.ActionStartGame, constants.ErrRoomNotFound.Error(), mt, player)
 }
