@@ -1,4 +1,4 @@
-package actions
+package lobbyactions
 
 import (
 	"github.com/schmonk.io/schmuriot-server/constants"

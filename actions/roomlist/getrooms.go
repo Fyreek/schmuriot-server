@@ -1,4 +1,4 @@
-package actions
+package roomlistactions
 
 import (
 	"github.com/schmonk.io/schmuriot-server/constants"

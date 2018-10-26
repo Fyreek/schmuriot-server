@@ -1,4 +1,4 @@
-package actions
+package undefinedactions
 
 import (
 	"github.com/schmonk.io/schmuriot-server/constants"

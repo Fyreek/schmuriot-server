@@ -4,8 +4,10 @@ import (
 	"strconv"
 
 	"github.com/schmonk.io/schmuriot-server/actions"
+	"github.com/schmonk.io/schmuriot-server/actions/undefined"
 	"github.com/schmonk.io/schmuriot-server/constants"
 	"github.com/schmonk.io/schmuriot-server/models"
+	"github.com/schmonk.io/schmuriot-server/sockets/routers"
 	"github.com/schmonk.io/schmuriot-server/utils"
 )
 
@@ -32,17 +34,17 @@ func PlayerLoop(player *models.Player) {
 				continue
 			}
 			if baseAction.Check(constants.ActionSetUser) {
-				actions.SetUser(player, message, mt)
+				undefinedactions.SetUser(player, message, mt)
 				continue
 			}
 			if baseAction.Check(constants.ActionGetConfig) {
-				actions.GetConfig(player, mt)
+				undefinedactions.GetConfig(player, mt)
 				continue
 			}
 			models.SendJsonResponse(false, constants.ActionNone, constants.ErrNameNotSet.Error(), mt, player)
 			continue
 		} else if player.State != constants.StateUndefined {
-			ActionRouter(player, message, mt)
+			socketrouters.BaseRouter(player, message, mt)
 			continue
 		} else {
 			models.SendJsonResponse(false, constants.ActionNone, constants.ErrInvalidPlayerState.Error(), mt, player)

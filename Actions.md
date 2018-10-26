@@ -44,11 +44,15 @@
     - [3.8 ToggleReady](#38-toggleready)
         - [3.8.1 Request](#381-request)
         - [3.8.2 Responses](#382-responses)
-- [4 Not implemented](#4-not-implemented)
-    - [4.1 GetMode](#41-getmode)
-    - [4.2 ChangeMode](#42-changemode)
-    - [4.3 GetGame](#43-getgame)
-    - [4.4 ChangeGame](#44-changegame)
+- [4 InGame](#4-ingame)
+    - [4.1 StartGame](#41-startgame)
+        - [4.1.1 Request](#411-request)
+        - [4.1.2 Responses](#412-responses)
+- [5 Not implemented](#5-not-implemented)
+    - [5.1 GetMode](#51-getmode)
+    - [5.2 ChangeMode](#52-changemode)
+    - [5.3 GetGame](#53-getgame)
+    - [5.4 ChangeGame](#54-changegame)
 
 ## 1 No State
 
@@ -466,21 +470,129 @@ Toggles the player ready state. Game can only be started if all players are read
 }
 ```
 - [GetRoom Responses](#312-responses) -> To all players in the room
+- If all players ready: [StartGame Responses](#412-responses)
 
-## 4 Not implemented
+## 4 InGame
 
-### 4.1 GetMode
+### 4.1 StartGame
+
+Sets the name of the user and registers him on the server
+
+#### 4.1.1 Request
+
+```
+{
+    "action": "startGame",
+    "rounds": 5,
+    "countdown": 15
+}
+```
+
+#### 4.1.2 Responses
+
+```
+{
+   "status":true,
+   "action":"startGame",
+   "game":{
+      "fields":[
+         [
+            {
+               "id":1,
+               "player":"",
+               "coins":4
+            },
+            {
+               "id":2,
+               "player":"5bd0ef4aac356640e899d481",
+               "coins":0
+            },
+            {
+               "id":3,
+               "player":"",
+               "coins":2
+            }
+         ],
+         [
+            {
+               "id":4,
+               "player":"5bd0ef4eac356640e899d482",
+               "coins":0
+            },
+            {
+               "id":5,
+               "player":"5bd0ef38ac356640e899d47f",
+               "coins":0
+            },
+            {
+               "id":6,
+               "player":"",
+               "coins":3
+            }
+         ],
+         [
+            {
+               "id":7,
+               "player":"",
+               "coins":2
+            },
+            {
+               "id":8,
+               "player":"5bd0ef42ac356640e899d480",
+               "coins":0
+            },
+            {
+               "id":9,
+               "player":"",
+               "coins":1
+            }
+         ]
+      ],
+      "rounds":5,
+      "countdown":15,
+      "currentRound":0,
+      "canReach":{
+         "5bd0ef38ac356640e899d47f":[
+            2,
+            4,
+            6,
+            8
+         ],
+         "5bd0ef42ac356640e899d480":[
+            5,
+            7,
+            9
+         ],
+         "5bd0ef4aac356640e899d481":[
+            1,
+            3,
+            5
+         ],
+         "5bd0ef4eac356640e899d482":[
+            1,
+            5,
+            7
+         ]
+      },
+      "moves":null
+   }
+}
+```
+
+## 5 Not implemented
+
+### 5.1 GetMode
 
 Gets a list off all available modes
 
-### 4.2 ChangeMode
+### 5.2 ChangeMode
 
 Changes the mode and resets player ready bool
 
-### 4.3 GetGame
+### 5.3 GetGame
 
 Gets a list of all available games
 
-### 4.4 ChangeGame
+### 5.4 ChangeGame
 
 Changes the game and resets player ready bool

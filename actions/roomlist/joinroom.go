@@ -1,4 +1,4 @@
-package actions
+package roomlistactions
 
 import (
 	"encoding/json"
