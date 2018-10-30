@@ -3,16 +3,19 @@ package models
 import (
 	"fmt"
 	"math/rand"
+
+	"github.com/schmonk.io/schmuriot-server/constants"
 )
 
 type CoinHunter struct {
-	Fields       [][]CoinHunterField `json:"fields"`
-	Rounds       int                 `json:"rounds"`
-	Countdown    int                 `json:"countdown"`
-	CurrentRound int                 `json:"currentRound"`
-	CanReach     map[string][]int    `json:"canReach"`
-	Moves        []CoinHunterMoves   `json:"moves"`
-	Coins        map[string][]int    `json:"coins"`
+	Fields       [][]CoinHunterField        `json:"fields"`
+	Rounds       int                        `json:"rounds"`
+	Countdown    int                        `json:"countdown"`
+	CurrentRound int                        `json:"currentRound"`
+	CanReach     map[string][]int           `json:"canReach"`
+	Moves        map[string]CoinHunterMoves `json:"moves"`
+	Coins        map[string][]int           `json:"coins"`
+	State        int                        `json:"state"`
 }
 
 type CoinHunterField struct {
@@ -26,12 +29,19 @@ type CoinHunterMoves struct {
 	Field  int    `json:"field"`
 }
 
-func CreateCoinHunter(players []string, round, countdown int) (CoinHunter, error) {
+type CoinHunterMovement struct {
+	Player  string `json:"player"`
+	Start   int    `json:"start"`
+	Move    int    `json:"move"`
+	Success bool   `json:"success"`
+}
+
+func CreateCoinHunter(round, countdown int) (CoinHunter, error) {
 	ch := CoinHunter{}
-	ch.GenerateField(players)
 	ch.Rounds = round
 	ch.CurrentRound = 0
 	ch.Countdown = countdown
+	ch.State = constants.GameStateNotStarted
 	return ch, nil
 }
 

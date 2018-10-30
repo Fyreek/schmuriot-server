@@ -22,9 +22,13 @@ var (
 	ActionChangePassword = "changePassword"
 	ActionKickPlayer     = "kickPlayer"
 	ActionToggleReady    = "toggleReady"
+	ActionStartGame      = "startGame"
 
 	//Game
-	ActionStartGame = "startGame"
+	ActionStartRound = "startRound"
+	ActionMakeMove   = "makeMove"
+	ActionEndRound   = "endRound"
+	ActionMoveResult = "moveResult"
 
 	// Not implemented
 	ActionChangeMode = "changeMode"

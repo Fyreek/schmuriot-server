@@ -189,7 +189,7 @@ func (r *Room) SendToAllPlayers(status bool, action string, message interface{},
 func (r *Room) SendToPlayer(status bool, action string, message interface{}, player *Player) {
 	if action == constants.ActionGetRoom {
 		SendJsonResponseRoom(status, constants.ActionGetRoom, 1, player)
-	} else if action == constants.ActionStartGame {
+	} else if action == constants.ActionStartRound {
 		SendJsonResponseGame(status, action, 1, player)
 	} else if action == constants.ActionChat {
 		str, _ := message.(string)
@@ -202,6 +202,14 @@ func (r *Room) SendToPlayer(status bool, action string, message interface{}, pla
 			SendJsonResponse(status, action, constants.ErrUnknownMessageType.Error(), 1, player)
 		}
 	}
+}
+
+func (r *Room) GetPlayerList() []string {
+	playerList := []string{}
+	for element := range r.Players {
+		playerList = append(playerList, element)
+	}
+	return playerList
 }
 
 func (r *Room) CheckAllReady() bool {

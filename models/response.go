@@ -48,6 +48,11 @@ type StatusResponseGame struct {
 	Game *CoinHunter `json:"game"`
 }
 
+type StatusResponseMovement struct {
+	StatusResponse
+	Players map[string]CoinHunterMovement `json:"players"`
+}
+
 //SendJsonResponse sends a response with a status, the provided action and a custom message
 func SendJsonResponse(status bool, action string, message string, mt int, player *Player) {
 	resp := StatusResponseMessage{}
@@ -130,6 +135,18 @@ func SendJsonResponseGame(status bool, action string, mt int, player *Player) {
 	resp.Action = constants.ActionStartGame
 	r := Rooms.GetRoom(player.GetRoomID())
 	resp.Game = r.Game
+	bytes, err := json.Marshal(resp)
+	if err != nil {
+		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))
+	}
+	player.Connection.WriteMessage(mt, bytes)
+}
+
+func SendJsonResponseMovement(players map[string]CoinHunterMovement, mt int, player *Player) {
+	resp := StatusResponseMovement{}
+	resp.Status = true
+	resp.Action = constants.ActionMoveResult
+	resp.Players = players
 	bytes, err := json.Marshal(resp)
 	if err != nil {
 		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/schmonk.io/schmuriot-server/actions/ingame"
 	"github.com/schmonk.io/schmuriot-server/constants"
 	"github.com/schmonk.io/schmuriot-server/models"
 	"github.com/schmonk.io/schmuriot-server/utils"
@@ -38,18 +39,20 @@ func StartGame(player *models.Player, message []byte, mt int) {
 			models.SendJsonResponse(false, constants.ActionStartGame, constants.ErrNotReady.Error(), mt, player)
 			return
 		}
-		playerList := []string{}
 		for element := range r.Players {
-			playerList = append(playerList, element)
 			p := r.Players[element]
 			p.SetState(constants.StateInGame)
 		}
-		game, _ := models.CreateCoinHunter(playerList, data.Rounds, data.Countdown)
+		data.Countdown = 15
+		data.Rounds = 5
+		game, _ := models.CreateCoinHunter(data.Rounds, data.Countdown)
 		fmt.Print("Game info ")
 		fmt.Println(game.Rounds)
 		r.Game = &game
-		r.SendToAllPlayers(true, constants.ActionStartGame, "", nil)
+		ingameactions.RoundStart(player, mt)
+		// r.SendToAllPlayers(true, constants.ActionStartGame, "", nil)
 		return
 	}
 	models.SendJsonResponse(false, constants.ActionStartGame, constants.ErrRoomNotFound.Error(), mt, player)
+	return
 }
