@@ -18,12 +18,13 @@ func ToggleReady(player *models.Player, mt int) {
 		r.SendToAllPlayers(true, constants.ActionGetRoom, "", nil)
 		start := r.CheckAllReady()
 		if start {
-			startGameAction := StartGameAction{}
-			startGameAction.Action = constants.ActionStartGame
-			startGameAction.Countdown = 15
-			startGameAction.Rounds = 5
-			bytes, _ := startGameAction.Marshal()
-			StartGame(player, bytes, mt)
+			// startGameAction := StartGameAction{}
+			// startGameAction.Action = constants.ActionStartGame
+			// startGameAction.Countdown = 15
+			// startGameAction.Rounds = 5
+			// bytes, _ := startGameAction.Marshal()
+			// StartGame(player, bytes, mt)
+			go r.StartGame()
 		}
 		return
 	}

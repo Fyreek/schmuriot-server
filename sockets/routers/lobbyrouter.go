@@ -27,8 +27,6 @@ func LobbyRouter(player *models.Player, message []byte, mt int, action string) {
 		lobbyactions.KickPlayer(player, message, mt)
 	case constants.ActionToggleReady:
 		lobbyactions.ToggleReady(player, mt)
-	case constants.ActionStartGame:
-		lobbyactions.StartGame(player, message, mt)
 	// case constants.ActionChangeGame:
 	// case constants.ActionChangeMode:
 	// case constants.ActionGetGame:

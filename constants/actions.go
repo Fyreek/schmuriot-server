@@ -29,6 +29,7 @@ var (
 	ActionMakeMove   = "makeMove"
 	ActionEndRound   = "endRound"
 	ActionMoveResult = "moveResult"
+	ActionCoinResult = "coinResult"
 
 	// Not implemented
 	ActionChangeMode = "changeMode"

@@ -31,9 +31,8 @@ func MakeMove(player *models.Player, message []byte, mt int) {
 			reachArray := r.Game.CanReach[player.GetID()]
 
 			found := false
-			// Crash because of index error
 			for _, i := range reachArray {
-				if reachArray[i] == data.Move {
+				if i == data.Move {
 					found = true
 				}
 			}
@@ -47,7 +46,6 @@ func MakeMove(player *models.Player, message []byte, mt int) {
 			pMove.Field = data.Move
 
 			r.Game.Moves[player.GetID()] = pMove
-
 			models.SendJsonResponse(true, constants.ActionMakeMove, "Move was saved", mt, player)
 
 			// Later: Check if all players made move. If true, cancel countdown and end round immediately

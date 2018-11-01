@@ -14,7 +14,7 @@ type CoinHunter struct {
 	CurrentRound int                        `json:"currentRound"`
 	CanReach     map[string][]int           `json:"canReach"`
 	Moves        map[string]CoinHunterMoves `json:"moves"`
-	Coins        map[string][]int           `json:"coins"`
+	Coins        map[string]int             `json:"coins"`
 	State        int                        `json:"state"`
 }
 
@@ -42,6 +42,8 @@ func CreateCoinHunter(round, countdown int) (CoinHunter, error) {
 	ch.CurrentRound = 0
 	ch.Countdown = countdown
 	ch.State = constants.GameStateNotStarted
+	ch.Coins = map[string]int{}
+	ch.Moves = map[string]CoinHunterMoves{}
 	return ch, nil
 }
 

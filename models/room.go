@@ -1,7 +1,9 @@
 package models
 
 import (
+	"fmt"
 	"sync"
+	"time"
 
 	"gopkg.in/mgo.v2/bson"
 
@@ -224,4 +226,114 @@ func (r *Room) CheckAllReady() bool {
 		}
 	}
 	return true
+}
+
+func (r *Room) StartGame() {
+	// ready := r.CheckAllReady()
+	for element := range r.Players {
+		p := r.Players[element]
+		p.SetState(constants.StateInGame)
+	}
+	countdown := 15
+	rounds := 5
+	game, _ := CreateCoinHunter(rounds, countdown)
+	fmt.Print("Game info ")
+	fmt.Println(game.Rounds)
+	r.Game = &game
+	r.Game.CurrentRound = 1
+	r.StartRound()
+}
+
+func (r *Room) StartRound() {
+	if r.Game != nil {
+		r.Game.State = constants.GameStatePlaying
+		r.Game.Moves = map[string]CoinHunterMoves{}
+		r.Game.GenerateField(r.GetPlayerList())
+		r.SendToAllPlayers(true, constants.ActionStartRound, "", nil)
+		gameTimer := time.NewTimer(time.Duration(r.Game.Countdown) * time.Second)
+		<-gameTimer.C
+		fmt.Println("gameTimer expired... Triggering round end")
+		r.EndRound()
+	}
+}
+
+func (r *Room) EndRound() {
+	if r.Game != nil {
+		r.Game.State = constants.GameStateEnd
+
+		// Calculate actual movement
+		// If two players want to get to the same field, cancel
+		// Collect coins
+		// Send response
+
+		validMovements := map[string]int{}
+		for pID := range r.Game.Moves {
+			pMove := r.Game.Moves[pID]
+			collision := false
+			for innerPID := range r.Game.Moves {
+				innerPMove := r.Game.Moves[innerPID]
+				if innerPMove.Player != pMove.Player {
+					if innerPMove.Field == pMove.Field {
+						collision = true
+					}
+				}
+			}
+			if !collision {
+				validMovements[pMove.Player] = pMove.Field
+			}
+		}
+		startPos := map[string]int{}
+		coinPos := map[int]int{}
+		for _, outerField := range r.Game.Fields {
+			for _, innerField := range outerField {
+				if innerField.Player != "" {
+					startPos[innerField.Player] = innerField.ID
+				}
+				if innerField.Coins != 0 {
+					coinPos[innerField.ID] = innerField.Coins
+				}
+			}
+		}
+		movements := map[string]CoinHunterMovement{}
+		for p := range r.Players {
+			m := CoinHunterMovement{}
+			m.Player = r.Players[p].GetID()
+			m.Start = startPos[p]
+			if vMove, ok := validMovements[p]; ok {
+				m.Move = vMove
+				m.Success = true
+				curCoins := r.Game.Coins[m.Player]
+				r.Game.Coins[m.Player] = curCoins + coinPos[vMove]
+			} else {
+				if r.Game.Moves[p].Field != 0 {
+					m.Move = r.Game.Moves[p].Field
+				} else {
+					m.Move = startPos[p]
+				}
+				m.Success = false
+			}
+			movements[p] = m
+		}
+		for p := range r.Players {
+			SendJsonResponseMovement(movements, 1, r.Players[p])
+			SendJsonResponseCoins(r.Game.Coins, 1, r.Players[p])
+		}
+
+		// Add coins
+		// Leaderboards response
+
+		if r.Game.CurrentRound == r.Game.Rounds {
+			// Game End
+			// Show end screen
+			waitTimer := time.NewTimer(time.Duration(5) * time.Second)
+			<-waitTimer.C
+			// Go back to lobby
+		} else {
+			// Next Round
+			r.Game.CurrentRound = r.Game.CurrentRound + 1
+			waitTimer := time.NewTimer(time.Duration(5) * time.Second)
+			<-waitTimer.C
+			r.StartRound()
+		}
+	}
 }

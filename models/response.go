@@ -53,6 +53,11 @@ type StatusResponseMovement struct {
 	Players map[string]CoinHunterMovement `json:"players"`
 }
 
+type StatusResponseCoins struct {
+	StatusResponse
+	Coins map[string]int `json:"coins"`
+}
+
 //SendJsonResponse sends a response with a status, the provided action and a custom message
 func SendJsonResponse(status bool, action string, message string, mt int, player *Player) {
 	resp := StatusResponseMessage{}
@@ -132,7 +137,7 @@ func SendJsonResponseConfig(mt int, player *Player) {
 func SendJsonResponseGame(status bool, action string, mt int, player *Player) {
 	resp := StatusResponseGame{}
 	resp.Status = true
-	resp.Action = constants.ActionStartGame
+	resp.Action = action
 	r := Rooms.GetRoom(player.GetRoomID())
 	resp.Game = r.Game
 	bytes, err := json.Marshal(resp)
@@ -147,6 +152,18 @@ func SendJsonResponseMovement(players map[string]CoinHunterMovement, mt int, pla
 	resp.Status = true
 	resp.Action = constants.ActionMoveResult
 	resp.Players = players
+	bytes, err := json.Marshal(resp)
+	if err != nil {
+		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))
+	}
+	player.Connection.WriteMessage(mt, bytes)
+}
+
+func SendJsonResponseCoins(coins map[string]int, mt int, player *Player) {
+	resp := StatusResponseCoins{}
+	resp.Status = true
+	resp.Action = constants.ActionCoinResult
+	resp.Coins = coins
 	bytes, err := json.Marshal(resp)
 	if err != nil {
 		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))
