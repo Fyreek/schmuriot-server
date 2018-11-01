@@ -3,65 +3,68 @@
 ## Overview
 
 - [1 No State](#1-no-state)
-    - [1.1 SetUser](#11-setuser)
-        - [1.1.1 Request](#111-request)
-        - [1.1.2 Responses](#112-responses)
-    - [1.2 GetConfig](#12-getconfig)
-        - [1.2.1 Request](#121-request)
-        - [1.2.2 Responses](#122-responses)
+	- [1.1 SetUser](#11-setuser)
+		- [1.1.1 Request](#111-request)
+		- [1.1.2 Responses](#112-responses)
+	- [1.2 GetConfig](#12-getconfig)
+		- [1.2.1 Request](#121-request)
+		- [1.2.2 Responses](#122-responses)
 - [2 RoomList](#2-roomlist)
-    - [2.1 GetRooms](#21-getrooms)
-        - [2.1.1 Request](#211-request)
-        - [2.1.2 Responses](#212-responses)
-    - [2.2 CreateRoom](#22-createroom)
-        - [2.2.1 Request](#221-request)
-        - [2.2.2 Responses](#222-responses)
-    - [2.3 JoinRoom](#23-joinroom)
-        - [2.3.1 Request](#231-request)
-        - [2.3.2 Responses](#232-responses)
+	- [2.1 GetRooms](#21-getrooms)
+		- [2.1.1 Request](#211-request)
+		- [2.1.2 Responses](#212-responses)
+	- [2.2 CreateRoom](#22-createroom)
+		- [2.2.1 Request](#221-request)
+		- [2.2.2 Responses](#222-responses)
+	- [2.3 JoinRoom](#23-joinroom)
+		- [2.3.1 Request](#231-request)
+		- [2.3.2 Responses](#232-responses)
 - [3 Room](#3-room)
-    - [3.1 GetRoom](#31-getroom)
-        - [3.1.1 Request](#311-request)
-        - [3.1.2 Responses](#312-responses)
-    - [3.2 LeaveRoom](#32-leaveroom)
-        - [3.2.1 Request](#321-request)
-        - [3.2.2 Responses](#322-responses)
-    - [3.3 DeleteRoom](#33-deleteroom)
-        - [3.3.1 Request](#331-request)
-        - [3.3.2 Responses](#332-responses)
-    - [3.4 Chat](#34-chat)
-        - [3.4.1 Request](#341-request)
-        - [3.4.2 Responses](#342-responses)
-    - [3.5 ChangeOwner](#35-changeowner)
-        - [3.5.1 Request](#351-request)
-        - [3.5.2 Responses](#352-responses)
-    - [3.6 ChangePassword](#36-changepassword)
-        - [3.6.1 Request](#361-request)
-        - [3.6.2 Responses](#362-responses)
-    - [3.7 KickPlayer](#37-kickplayer)
-        - [3.7.1 Request](#371-request)
-        - [3.7.2 Responses](#372-responses)
-    - [3.8 ToggleReady](#38-toggleready)
-        - [3.8.1 Request](#381-request)
-        - [3.8.2 Responses](#382-responses)
+	- [3.1 GetRoom](#31-getroom)
+		- [3.1.1 Request](#311-request)
+		- [3.1.2 Responses](#312-responses)
+	- [3.2 LeaveRoom](#32-leaveroom)
+		- [3.2.1 Request](#321-request)
+		- [3.2.2 Responses](#322-responses)
+	- [3.3 DeleteRoom](#33-deleteroom)
+		- [3.3.1 Request](#331-request)
+		- [3.3.2 Responses](#332-responses)
+	- [3.4 Chat](#34-chat)
+		- [3.4.1 Request](#341-request)
+		- [3.4.2 Responses](#342-responses)
+	- [3.5 ChangeOwner](#35-changeowner)
+		- [3.5.1 Request](#351-request)
+		- [3.5.2 Responses](#352-responses)
+	- [3.6 ChangePassword](#36-changepassword)
+		- [3.6.1 Request](#361-request)
+		- [3.6.2 Responses](#362-responses)
+	- [3.7 KickPlayer](#37-kickplayer)
+		- [3.7.1 Request](#371-request)
+		- [3.7.2 Responses](#372-responses)
+	- [3.8 ToggleReady](#38-toggleready)
+		- [3.8.1 Request](#381-request)
+		- [3.8.2 Responses](#382-responses)
 - [4 InGame](#4-ingame)
-    - [4.1 StartRound](#41-startround)
-        - [4.1.1 Request](#411-request)
-        - [4.1.2 Responses](#412-responses)
-    - [4.2 MakeMove](#42-makemove)
-        - [4.2.1 Request](#421-request)
-        - [4.2.2 Responses](#422-responses)
-    - [4.3 MoveResult](#43-moveresult)
-        - [4.3.1 Request](#431-request)
-        - [4.3.2 Responses](#432-responses)
-    - [4.4 CoinResult](#44-coinresult)
-        - [4.4.1 Request](#441-request)
-        - [4.4.2 Responses](#442-responses)
+	- [4.1 StartRound](#41-startround)
+		- [4.1.1 Request](#411-request)
+		- [4.1.2 Responses](#412-responses)
+	- [4.2 MakeMove](#42-makemove)
+		- [4.2.1 Request](#421-request)
+		- [4.2.2 Responses](#422-responses)
+	- [4.3 MoveResult](#43-moveresult)
+		- [4.3.1 Request](#431-request)
+		- [4.3.2 Responses](#432-responses)
+	- [4.4 CoinResult](#44-coinresult)
+		- [4.4.1 Request](#441-request)
+		- [4.4.2 Responses](#442-responses)
+	- [4.5 EndGame](#45-endgame)
+		- [4.5.1 Request](#451-request)
+		- [4.5.2 Responses](#452-responses)
 - [5 Not implemented](#5-not-implemented)
-    - [5.1 GetMode](#51-getmode)
-    - [5.2 ChangeMode](#52-changemode)
-    - [5.3 GetGame](#53-getgame)
-    - [5.4 ChangeGame](#54-changegame)
+	- [5.1 GetMode](#51-getmode)
+	- [5.2 ChangeMode](#52-changemode)
+	- [5.3 GetGame](#53-getgame)
+	- [5.4 ChangeGame](#54-changegame)
 
 ## 1 No State
 
@@ -672,6 +675,29 @@ Handled internally => no request, just response
 }
 ```
 
+### 4.5 EndGame
+
+Ends the game
+Displays winner/s and coins for each player
+
+#### 4.5.1 Request
+
+Handled internally => no request, just response
+
+#### 4.5.2 Responses
+
+```
+{
+   "status":true,
+   "action":"endGame",
+   "coins":{
+      "5bdb04b0ac12620d806b8505":4
+   },
+   "winner":[
+      "5bdb04b0ac12620d806b8505"
+   ]
+}
+```
 
 ## 5 Not implemented
 

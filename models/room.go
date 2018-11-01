@@ -192,7 +192,9 @@ func (r *Room) SendToPlayer(status bool, action string, message interface{}, pla
 	if action == constants.ActionGetRoom {
 		SendJsonResponseRoom(status, constants.ActionGetRoom, 1, player)
 	} else if action == constants.ActionStartRound {
-		SendJsonResponseGame(status, action, 1, player)
+		SendJsonResponseRound(1, player)
+	} else if action == constants.ActionEndGame {
+		SendJsonResponseEndGame(1, player)
 	} else if action == constants.ActionChat {
 		str, _ := message.(string)
 		SendJsonResponseChat(status, action, str, 1, player)
@@ -229,7 +231,6 @@ func (r *Room) CheckAllReady() bool {
 }
 
 func (r *Room) StartGame() {
-	// ready := r.CheckAllReady()
 	for element := range r.Players {
 		p := r.Players[element]
 		p.SetState(constants.StateInGame)
@@ -242,6 +243,18 @@ func (r *Room) StartGame() {
 	r.Game = &game
 	r.Game.CurrentRound = 1
 	r.StartRound()
+}
+
+func (r *Room) EndGame() {
+	r.SendToAllPlayers(true, constants.ActionEndGame, "", nil)
+	waitTimer := time.NewTimer(time.Duration(10) * time.Second)
+	<-waitTimer.C
+	for element := range r.Players {
+		p := r.Players[element]
+		p.SetState(constants.StateLobby)
+	}
+	r.Game = nil
+	r.SendToAllPlayers(true, constants.ActionGetRoom, "", nil)
 }
 
 func (r *Room) StartRound() {
@@ -260,12 +273,6 @@ func (r *Room) StartRound() {
 func (r *Room) EndRound() {
 	if r.Game != nil {
 		r.Game.State = constants.GameStateEnd
-
-		// Calculate actual movement
-		// If two players want to get to the same field, cancel
-		// Collect coins
-		// Send response
-
 		validMovements := map[string]int{}
 		for pID := range r.Game.Moves {
 			pMove := r.Game.Moves[pID]
@@ -319,15 +326,9 @@ func (r *Room) EndRound() {
 			SendJsonResponseCoins(r.Game.Coins, 1, r.Players[p])
 		}
 
-		// Add coins
-		// Leaderboards response
-
 		if r.Game.CurrentRound == r.Game.Rounds {
 			// Game End
-			// Show end screen
-			waitTimer := time.NewTimer(time.Duration(5) * time.Second)
-			<-waitTimer.C
-			// Go back to lobby
+			r.EndGame()
 		} else {
 			// Next Round
 			r.Game.CurrentRound = r.Game.CurrentRound + 1

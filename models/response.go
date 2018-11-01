@@ -43,7 +43,7 @@ type StatusResponseConfig struct {
 	Config config.ConfigStruct `json:"config"`
 }
 
-type StatusResponseGame struct {
+type StatusResponseRound struct {
 	StatusResponse
 	Game *CoinHunter `json:"game"`
 }
@@ -56,6 +56,11 @@ type StatusResponseMovement struct {
 type StatusResponseCoins struct {
 	StatusResponse
 	Coins map[string]int `json:"coins"`
+}
+
+type StatusResponseEndGame struct {
+	StatusResponseCoins
+	Winner []string `json:"winner"`
 }
 
 //SendJsonResponse sends a response with a status, the provided action and a custom message
@@ -134,10 +139,10 @@ func SendJsonResponseConfig(mt int, player *Player) {
 	player.Connection.WriteMessage(mt, bytes)
 }
 
-func SendJsonResponseGame(status bool, action string, mt int, player *Player) {
-	resp := StatusResponseGame{}
+func SendJsonResponseRound(mt int, player *Player) {
+	resp := StatusResponseRound{}
 	resp.Status = true
-	resp.Action = action
+	resp.Action = constants.ActionStartRound
 	r := Rooms.GetRoom(player.GetRoomID())
 	resp.Game = r.Game
 	bytes, err := json.Marshal(resp)
@@ -164,6 +169,29 @@ func SendJsonResponseCoins(coins map[string]int, mt int, player *Player) {
 	resp.Status = true
 	resp.Action = constants.ActionCoinResult
 	resp.Coins = coins
+	bytes, err := json.Marshal(resp)
+	if err != nil {
+		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))
+	}
+	player.Connection.WriteMessage(mt, bytes)
+}
+
+func SendJsonResponseEndGame(mt int, player *Player) {
+	resp := StatusResponseEndGame{}
+	resp.Status = true
+	resp.Action = constants.ActionEndGame
+	r := Rooms.GetRoom(player.GetRoomID())
+	resp.Coins = r.Game.Coins
+	hCoins := 0
+	for playerID := range resp.Coins {
+		p := resp.Coins[playerID]
+		if p > hCoins {
+			resp.Winner = []string{playerID}
+			hCoins = p
+		} else if p == hCoins {
+			resp.Winner = append(resp.Winner, playerID)
+		}
+	}
 	bytes, err := json.Marshal(resp)
 	if err != nil {
 		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))

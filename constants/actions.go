@@ -30,6 +30,7 @@ var (
 	ActionEndRound   = "endRound"
 	ActionMoveResult = "moveResult"
 	ActionCoinResult = "coinResult"
+	ActionEndGame    = "endGame"
 
 	// Not implemented
 	ActionChangeMode = "changeMode"
