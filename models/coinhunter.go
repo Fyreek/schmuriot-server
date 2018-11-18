@@ -13,8 +13,8 @@ type CoinHunter struct {
 	Countdown    int                        `json:"countdown"`
 	CurrentRound int                        `json:"currentRound"`
 	CanReach     map[string][]int           `json:"canReach"`
-	Moves        map[string]CoinHunterMoves `json:"moves"`
-	Coins        map[string]int             `json:"coins"`
+	Moves        map[string]CoinHunterMoves `json:"-"`
+	Coins        map[string]int             `json:"-"`
 	State        int                        `json:"state"`
 }
 

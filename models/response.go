@@ -19,7 +19,8 @@ type StatusResponseMessage struct {
 
 type StatusResponsePlayerID struct {
 	StatusResponse
-	PlayerID string `json:"playerid"`
+	PlayerID   string `json:"playerid"`
+	PlayerName string `json:"playername"`
 }
 
 type StatusResponseRoomList struct {
@@ -82,6 +83,7 @@ func SendJsonResponsePlayerID(status bool, action string, id string, mt int, pla
 	resp.Status = status
 	resp.Action = action
 	resp.PlayerID = id
+	resp.PlayerName = player.Name
 	bytes, err := json.Marshal(resp)
 	if err != nil {
 		player.Connection.WriteMessage(mt, []byte(constants.ErrSerializing.Error()))
